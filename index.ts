@@ -5,6 +5,8 @@ import socketAuthorization from './controllers/socketAuthorization';
 import { submitComment } from './controllers/socketComment';
 import { PostComment } from '@prisma/client';
 
+const PORT = process.env.PORT || 5000;
+
 const httpServer = http.createServer();
 const io = new Server(httpServer, {
   cors: {
@@ -41,6 +43,6 @@ io.on("connection", (socket: Socket) => {
   })
 });
 
-httpServer.listen(5000, () => {
+httpServer.listen(PORT, () => {
   console.log("Server is listening on port 5000");
 });

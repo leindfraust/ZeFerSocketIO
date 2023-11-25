@@ -5,8 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc && npx prisma generate",
-    "dev": "npx nodemon index.ts",
-    "start": "node build/index.js"
+    "dev": "cross-env NODE_ENV=development npx nodemon index.ts",
+    "start": "cross-env NODE_ENV=production node build/index.js"
   },
   "author": "Romel Jr Zerna",
   "license": "UNLICENSED",
@@ -15,6 +15,7 @@
     "@types/node": "^20.8.9",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.52.0",
     "eslint-config-standard-with-typescript": "^39.1.1",
     "eslint-plugin-import": "^2.29.0",

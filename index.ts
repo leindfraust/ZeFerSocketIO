@@ -6,11 +6,12 @@ import { submitComment } from './controllers/socketComment';
 import { PostComment } from '@prisma/client';
 
 const PORT = process.env.PORT || 5000;
+const env = process.env.NODE_ENV
 
 const httpServer = http.createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Adjust this to your client's origin
+    origin: env === 'production' ? 'https://zefer.vercel.app/' : 'localhost:3000', // Adjust this to your client's origin
     methods: ["GET", "POST"]
   }
 });
@@ -44,5 +45,5 @@ io.on("connection", (socket: Socket) => {
 });
 
 httpServer.listen(PORT, () => {
-  console.log("Server is listening on port 5000");
+  console.log("Server is listening on port " + PORT);
 });

@@ -39,8 +39,8 @@ io.on("connection", (socket: Socket) => {
 
   socket.on('submitComment', async ({ titleId, userId, content, commentReplyPostId }: PostComment & { titleId: string, content: string, commentReplyPostId: string }) => {
     const rooms = Array.from(socket.rooms);
-    if (!rooms.find(room => room === currentRoom)) socket.join(currentRoom)
-    submitComment(titleId, userId, content, io, currentRoom, commentReplyPostId)
+    if (!rooms.find(room => room === currentRoom)) await socket.join(currentRoom)
+    await submitComment(socket.id, titleId, userId, content, io, currentRoom, commentReplyPostId)
   })
 });
 

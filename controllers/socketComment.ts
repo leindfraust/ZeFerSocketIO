@@ -3,7 +3,7 @@ import type { DefaultEventsMap } from "socket.io/dist/typed-events"
 import prisma from "../db"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const submitComment = async (id: string, titleId: string, userId: string, content: string, io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, currentRoom: string, commentReplyPostId?: string) => {
+const submitComment = async (socketId: string, titleId: string, userId: string, content: string, io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, currentRoom: string, commentReplyPostId?: string) => {
     const getPost = await prisma.post.findUnique({
         where: { titleId: titleId },
         select: {
@@ -52,9 +52,9 @@ const submitComment = async (id: string, titleId: string, userId: string, conten
     if (submitComment) {
         if (commentReplyPostId) {
             io.to(currentRoom).emit("refetchReplies")
-            io.to(id).emit('clearContentCommentBox')
+            io.to(socketId).emit('clearContentCommentBox')
         } else {
-            io.to(id).emit('clearContentCommentBox')
+            io.to(socketId).emit('clearContentCommentBox')
         }
         io.to(currentRoom).emit("refetchComments")
     }

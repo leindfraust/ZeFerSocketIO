@@ -40,7 +40,7 @@ async function leaveAllRooms(socket: Socket) {
 
 io.use((socket, next) => socketAuthorization(socket, next))
 io.on("connection", (socket: Socket) => {
-
+  socket.conn.once("upgrade", () => console.log('Transport upgraded to', socket.conn.transport.name))
   socket.on('initializeSocketPostRoom', (titleId: string) => {
     leaveAllRooms(socket)
     socket.join(titleId)
@@ -60,7 +60,7 @@ io.on("connection", (socket: Socket) => {
   })
 
   socket.on('submitNotification', async ({ userId, from, fromImage, message, actionUrl }: UserNotifications) => {
-    await submitNotification(notifRoom, userId, from, fromImage, message, actionUrl, io)
+    await submitNotification(userId, from, fromImage, message, actionUrl, io)
   })
 });
 

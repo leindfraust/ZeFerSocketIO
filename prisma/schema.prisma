@@ -13,36 +13,6 @@ datasource db {
   schemas           = ["users", "sessions", "posts", "tags"]
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@schema("users")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@schema("sessions")
-}
-
 model User {
   id               String              @id @default(cuid())
   username         String?             @unique
@@ -52,23 +22,12 @@ model User {
   comments         PostComment[]
   commentReactions CommentReaction[]
   postReactions    PostReaction[]
-  accounts         Account[]
-  sessions         Session[]
   post             Post[]
   notifications    UserNotifications[]
 
   @@unique([id, name, image])
   @@unique([id, name, username, image])
   @@schema("users")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@schema("sessions")
 }
 
 model Post {

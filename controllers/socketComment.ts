@@ -3,15 +3,25 @@ import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import prisma from "../db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const submitComment = async (
-    socketId: string,
-    titleId: string,
-    userId: string,
-    content: string,
-    io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-    currentRoom: string,
-    commentReplyPostId?: string,
-) => {
+
+type Options = {
+    socketId: string;
+    titleId: string;
+    userId: string;
+    content: string;
+    io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+    currentRoom: string;
+    commentReplyPostId?: string;
+};
+const submitComment = async ({
+    socketId,
+    titleId,
+    userId,
+    content,
+    io,
+    currentRoom,
+    commentReplyPostId,
+}: Options) => {
     const getPost = await prisma.post.findUnique({
         where: { titleId: titleId },
         select: {

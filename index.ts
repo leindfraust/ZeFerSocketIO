@@ -77,15 +77,15 @@ io.on("connection", (socket: Socket) => {
             const rooms = Array.from(socket.rooms);
             if (!rooms.find((room) => room === currentRoom))
                 await socket.join(currentRoom);
-            await submitComment(
-                socket.id,
+            await submitComment({
+                socketId: socket.id,
                 titleId,
                 userId,
                 content,
                 io,
                 currentRoom,
                 commentReplyPostId,
-            );
+            });
         },
     );
 
@@ -98,14 +98,14 @@ io.on("connection", (socket: Socket) => {
             message,
             actionUrl,
         }: UserNotifications) => {
-            await submitNotification(
+            await submitNotification({
                 userId,
                 from,
                 fromImage,
                 message,
                 actionUrl,
                 io,
-            );
+            });
         },
     );
 });

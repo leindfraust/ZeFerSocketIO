@@ -31,15 +31,16 @@ model User {
 }
 
 model Post {
-  id             String         @id @default(cuid())
-  titleId        String         @unique
+  id             String              @id @default(cuid())
+  titleId        String              @unique
   userId         String
   author         String
   authorUsername String?
   authorImage    String
   reactions      PostReaction[]
   comments       PostComment[]
-  user           User           @relation(fields: [userId, author, authorImage], references: [id, name, image])
+  activities     UserNotifications[]
+  user           User                @relation(fields: [userId, author, authorImage], references: [id, name, image])
 
   @@schema("posts")
 }
@@ -99,9 +100,11 @@ model PostReaction {
 model UserNotifications {
   id        String   @id @default(uuid())
   userId    String
+  postId    String?
   from      String?
   fromImage String?
   message   String
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   actionUrl String
   createdAt DateTime @default(now())
   new       Boolean  @default(true)

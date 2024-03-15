@@ -2,9 +2,9 @@ import type { Server } from "socket.io";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import prisma from "../db";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Options = {
     userId: string;
+    postId: string | null;
     from: string | null;
     fromImage: string | null;
     message: string;
@@ -13,6 +13,7 @@ type Options = {
 };
 const submitNotification = async ({
     userId,
+    postId,
     from,
     fromImage,
     message,
@@ -25,6 +26,9 @@ const submitNotification = async ({
             from: from,
             fromImage: fromImage,
             message: message,
+            ...(postId && {
+                postId,
+            }),
             actionUrl: actionUrl,
         },
     });

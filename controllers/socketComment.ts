@@ -2,8 +2,6 @@ import type { Server } from "socket.io";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import prisma from "../db";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 type Options = {
     socketId: string;
     titleId: string;
@@ -30,15 +28,8 @@ const submitComment = async ({
     });
 
     if (!getPost) throw new Error("Post not found.");
-    type SubmitQuery = {
-        data: {
-            user: object;
-            post: object;
-            postCommentReply?: object;
-            content: string;
-        };
-    };
-    const submitQuery: SubmitQuery = {
+
+    const submitComment = await prisma.postComment.create({
         data: {
             user: {
                 connect: {
@@ -51,21 +42,14 @@ const submitComment = async ({
                 },
             },
             content: JSON.parse(content as string),
-        },
-    };
-    if (commentReplyPostId !== undefined) {
-        submitQuery.data = {
-            ...submitQuery.data,
-            postCommentReply: {
-                connect: {
-                    id: commentReplyPostId,
+            ...(commentReplyPostId && {
+                postCommentReply: {
+                    connect: {
+                        id: commentReplyPostId,
+                    },
                 },
-            },
-        };
-    }
-
-    const submitComment = await prisma.postComment.create({
-        ...submitQuery,
+            }),
+        },
     });
     if (submitComment) {
         if (commentReplyPostId) {

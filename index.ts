@@ -94,6 +94,7 @@ io.on("connection", (socket: Socket) => {
         async ({
             userId,
             postId,
+            fromUserId,
             from,
             fromImage,
             message,
@@ -102,6 +103,7 @@ io.on("connection", (socket: Socket) => {
             await submitNotification({
                 userId,
                 postId,
+                fromUserId,
                 from,
                 fromImage,
                 message,

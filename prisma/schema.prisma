@@ -14,16 +14,17 @@ datasource db {
 }
 
 model User {
-  id               String              @id @default(cuid())
-  username         String?             @unique
-  name             String?
-  email            String?             @unique
-  image            String
-  comments         PostComment[]
-  commentReactions CommentReaction[]
-  postReactions    PostReaction[]
-  post             Post[]
-  notifications    UserNotifications[]
+  id                String              @id @default(cuid())
+  username          String?             @unique
+  name              String?
+  email             String?             @unique
+  image             String
+  comments          PostComment[]
+  commentReactions  CommentReaction[]
+  postReactions     PostReaction[]
+  post              Post[]
+  notifications     UserNotifications[]
+  sentNotifications UserNotifications[] @relation("UserNotificationsFromUser")
 
   @@unique([id, name, image])
   @@unique([id, name, username, image])
@@ -98,17 +99,19 @@ model PostReaction {
 }
 
 model UserNotifications {
-  id        String   @id @default(uuid())
-  userId    String
-  postId    String?
-  from      String?
-  fromImage String?
-  message   String
-  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  actionUrl String
-  createdAt DateTime @default(now())
-  new       Boolean  @default(true)
-  user      User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(uuid())
+  userId     String
+  postId     String?
+  fromUserId String?
+  from       String?
+  fromImage  String?
+  message    String
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  actionUrl  String
+  createdAt  DateTime @default(now())
+  new        Boolean  @default(true)
+  user       User     @relation(fields: [userId], references: [id])
+  fromUser   User?    @relation("UserNotificationsFromUser", fields: [fromUserId], references: [id])
 
   @@schema("users")
 }

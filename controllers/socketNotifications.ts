@@ -5,6 +5,7 @@ import prisma from "../db";
 type Options = {
     userId: string;
     postId: string | null;
+    fromUserId: string | null;
     from: string | null;
     fromImage: string | null;
     message: string;
@@ -14,6 +15,7 @@ type Options = {
 const submitNotification = async ({
     userId,
     postId,
+    fromUserId,
     from,
     fromImage,
     message,
@@ -29,10 +31,13 @@ const submitNotification = async ({
             ...(postId && {
                 postId,
             }),
+            ...(fromUserId && {
+                fromUserId,
+            }),
             actionUrl: actionUrl,
         },
     });
-    if (postNotification) io.to(userId).emit("notifications");
+    if (postNotification) io.to(userId).emit("notifications", fromUserId);
 };
 
 export { submitNotification };

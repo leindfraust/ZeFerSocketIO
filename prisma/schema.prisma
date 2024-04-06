@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(cuid())
-  username          String?             @unique
-  name              String?
-  email             String?             @unique
-  image             String
-  comments          PostComment[]
-  commentReactions  CommentReaction[]
-  postReactions     PostReaction[]
-  post              Post[]
-  notifications     UserNotifications[]
-  sentNotifications UserNotifications[] @relation("UserNotificationsFromUser")
+  id                    String              @id @default(cuid())
+  username              String?             @unique
+  name                  String?
+  email                 String?             @unique
+  image                 String
+  comments              PostComment[]
+  commentReactions      CommentReaction[]
+  postReactions         PostReaction[]
+  post                  Post[]
+  sendNotificationEmail Boolean             @default(true)
+  sendNotificationPhone Boolean             @default(false)
+  notifications         UserNotifications[]
+  sentNotifications     UserNotifications[] @relation("UserNotificationsFromUser")
 
   @@unique([id, name, image])
   @@unique([id, name, username, image])

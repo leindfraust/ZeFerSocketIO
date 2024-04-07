@@ -32,6 +32,7 @@ const submitNotification = async ({
             sendNotificationEmail: true,
             email: true,
             sendNotificationPhone: true,
+            name: true,
         },
     });
     const postNotification = await prisma.userNotifications.create({
@@ -49,7 +50,14 @@ const submitNotification = async ({
             actionUrl: actionUrl,
         },
     });
-    if (user?.sendNotificationEmail && user?.email) {
+    if (user?.sendNotificationEmail && user.email && user.name) {
+        let postName: string | undefined = "";
+        if (postId) {
+            const post = await prisma.post.findUnique({
+                where: { id: postId },
+            });
+            postName = post?.title;
+        }
         const baseUrl =
             process.env.NODE_ENV === "production"
                 ? "https://zefer.blog"
@@ -60,8 +68,10 @@ const submitNotification = async ({
             to: [user.email],
             subject: `${from} ${message}`,
             html: notificationTemplate({
+                to: user.name,
                 from,
                 message,
+                postName,
                 actionUrl: `${baseUrl}/${actionUrl}`,
             }),
         });
